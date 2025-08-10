@@ -121,8 +121,11 @@ class AdvancedWeightSpaceDiffusion(nn.Module):
             if module.bias is not None:
                 torch.nn.init.zeros_(module.bias)
         elif isinstance(module, nn.LayerNorm):
-            torch.nn.init.ones_(module.weight)
-            torch.nn.init.zeros_(module.bias)
+            if module.weight is not None:
+                torch.nn.init.ones_(module.weight)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+    main
     def forward(self, noisy_weights_flat, t):
         if t.ndim == 2:
             t = t.squeeze(-1)
