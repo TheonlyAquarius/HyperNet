@@ -1,8 +1,9 @@
+import torch
 import torch.nn as nn
 
-class ReferenceModel(nn.Module):
+class model_ref(nn.Module):
     def __init__(self):
-        super(ReferenceModel, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout(0.25)
@@ -22,5 +23,4 @@ class ReferenceModel(nn.Module):
         x = nn.functional.relu(x)
         x = self.dropout2(x)
         x = self.fc2(x)
-        output = nn.functional.log_softmax(x, dim=1)
-        return output
+        return nn.functional.log_softmax(x, dim=1)
