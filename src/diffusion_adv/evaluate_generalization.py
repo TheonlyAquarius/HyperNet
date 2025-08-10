@@ -53,7 +53,8 @@ def evaluate_diffusion_generated_checkpoints(
     target_model_reference,
     checkpoints_OG,
     batch_size_eval=128,
-    plot_results=True
+    plot_results=True,
+    download=False
 ):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     target_model_reference.to(device)
@@ -100,7 +101,7 @@ def evaluate_diffusion_generated_checkpoints(
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
-    test_dataset = datasets.MNIST('./data', train=False, download=False, transform=transform)
+    test_dataset = datasets.MNIST('./data', train=False, download=download, transform=transform)
     test_loader = DataLoader(test_dataset, batch_size=batch_size_eval, shuffle=True)
     criterion = nn.CrossEntropyLoss(reduction='sum')
     eval_model = TargetModel().to(device)
@@ -152,6 +153,7 @@ def evaluate_diffusion_generated_checkpoints(
     print("Evaluation finished.")
 
 # KEY
+# download: dataset flag
 # evaluate_model_performance: evaluator
 # generate_checkpoints_with_diffusion: generator
 # evaluate_diffusion_generated_checkpoints: evaluation pipeline
