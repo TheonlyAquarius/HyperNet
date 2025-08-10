@@ -125,6 +125,7 @@ class AdvancedWeightSpaceDiffusion(nn.Module):
                 torch.nn.init.ones_(module.weight)
             if module.bias is not None:
                 torch.nn.init.zeros_(module.bias)
+    main
     def forward(self, noisy_weights_flat, t):
         if t.ndim == 2:
             t = t.squeeze(-1)
