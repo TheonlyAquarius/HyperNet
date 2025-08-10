@@ -1,9 +1,4 @@
-def create_checkpoints(config):
-    """
-    This function is responsible for training the ReferenceModel and saving
-    the checkpoints that will be used to train the WeightGenerator.
-    """
+def ckpt_make(cfg):
     print("Creating checkpoints...")
-    print(f"Configuration: {config}")
-    # Placeholder for the training logic of the ReferenceModel
+    print(f"Configuration: {cfg}")
     pass
