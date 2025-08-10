@@ -5,6 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 import os
 import glob
 import time
+from safetensors.torch import save_file, load_file
 from .diffusion_model import AdvancedWeightSpaceDiffusion, flatten_state_dict, get_target_model_flat_dim
 from .target_model import TargetModel
 
@@ -30,9 +31,9 @@ class WeightCheckpointsDataset(Dataset):
             raise IndexError(f"Index {idx} out of range")
         w_path_current = self.weight_files[idx]
         w_path_next = self.weight_files[idx+1]
-        state_dict_current = torch.load(w_path_current, map_location='cpu')
+        state_dict_current = load_file(w_path_current, device='cpu')
         current_w = flatten_state_dict(state_dict_current)
-        state_dict_next = torch.load(w_path_next, map_location='cpu')
+        state_dict_next = load_file(w_path_next, device='cpu')
         target_next_w = flatten_state_dict(state_dict_next)
         if current_w.shape[0] != self.flat_dim or target_next_w.shape[0] != self.flat_dim:
             raise ValueError("Dimension mismatch in loaded weights")
@@ -95,7 +96,7 @@ def train_diffusion_model(
             total_loss += loss.item()
         avg_loss = total_loss / len(dataloader)
         print(f"Epoch [{epoch}/{epochs}], Average Loss: {avg_loss:.6f} | Time: {time.time()-start_time:.2f}s")
-    torch.save(diffusion_model.state_dict(), save_path)
+    save_file(diffusion_model.state_dict(), save_path)
 
 # KEY
 # WeightCheckpointsDataset: dataset

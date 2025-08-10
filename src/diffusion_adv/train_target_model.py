@@ -4,6 +4,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import os
+from safetensors.torch import save_file
 from .target_model import TargetModel
 
 def train_target_model(epochs=5, lr=0.01, batch_size=64, save_dir='checkpoints_weights_cnn'):
@@ -27,7 +28,7 @@ def train_target_model(epochs=5, lr=0.01, batch_size=64, save_dir='checkpoints_w
             loss = criterion(output, target)
             loss.backward()
             optimizer.step()
-        torch.save(model.state_dict(), os.path.join(save_dir, f'weights_epoch_{epoch}.safetensors'))
+        save_file(model.state_dict(), os.path.join(save_dir, f'weights_epoch_{epoch}.safetensors'))
 
 # KEY
 # train_target_model: cnn trainer

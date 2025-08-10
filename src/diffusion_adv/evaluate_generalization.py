@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import os
 import glob
 import matplotlib.pyplot as plt
+from safetensors.torch import save_file, load_file
 from .target_model import TargetModel
 from .diffusion_model import AdvancedWeightSpaceDiffusion, flatten_state_dict, unflatten_to_state_dict, get_target_model_flat_dim
 
@@ -76,7 +77,7 @@ def evaluate_diffusion_generated_checkpoints(
         use_cross_attention=use_cross_attention,
         use_adaptive_norm=use_adaptive_norm
     )
-    diffusion_model.load_state_dict(torch.load(diffusion_model_path, map_location=device))
+    diffusion_model.load_state_dict(load_file(diffusion_model_path, device=device))
     diffusion_model.eval()
     new_random_model = TargetModel()
     initial_model_state_dict = new_random_model.state_dict()
@@ -142,10 +143,10 @@ def evaluate_diffusion_generated_checkpoints(
     if save_choice in ['yes', 'y']:
         save_dir = 'generalized_checkpoints_weights'
         os.makedirs(save_dir, exist_ok=True)
-        torch.save(initial_model_state_dict, os.path.join(save_dir, 'weights_step_0.safetensors'))
+        save_file(initial_model_state_dict, os.path.join(save_dir, 'weights_step_0.safetensors'))
         for i, flat_weights in enumerate(generated_weights_flat_sequence):
             state_dict = unflatten_to_state_dict(flat_weights.cpu(), reference_state_dict)
-            torch.save(state_dict, os.path.join(save_dir, f'weights_step_{i+1}.safetensors'))
+            save_file(state_dict, os.path.join(save_dir, f'weights_step_{i+1}.safetensors'))
         print(f"Saved {len(generated_weights_flat_sequence) + 1} weight files to '{save_dir}'.")
     else:
         print("Generated weights were not saved.")
