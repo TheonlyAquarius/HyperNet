@@ -1,7 +1,9 @@
-architecture: src.architectures.cnn
+architecture: src.architectures.target_net
 dataset: data/MNIST
+checkpoint_dir: checkpoints
 hyperparameters:
   learning_rate: 0.001
   batch_size: 32
   epochs: 10
+weights: checkpoints/0.pt
 task: train_generator
