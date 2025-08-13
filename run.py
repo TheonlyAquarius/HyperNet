@@ -1,6 +1,7 @@
 import argparse
 import yaml
 from pathlib import Path
+from src.diffusion.train_generator import train as train_gen
 
 def entry():
     par = argparse.ArgumentParser()
@@ -13,8 +14,9 @@ def entry():
         return
     with open(path_cfg, 'r') as fh:
         cfg = yaml.safe_load(fh)
-    print("Loaded configuration:")
-    print(yaml.dump(cfg, indent=2))
+    t = cfg.get('task')
+    if t == 'train_generator':
+        train_gen(cfg)
 
 if __name__ == '__main__':
     entry()

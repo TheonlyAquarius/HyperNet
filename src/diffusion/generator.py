@@ -1,10 +1,10 @@
 import torch.nn as nn
 
-class WeightGenerator(nn.Module):
-    def __init__(self):
-        super(WeightGenerator, self).__init__()
-        # Placeholder for the diffusion model architecture
-        self.fc1 = nn.Linear(10, 10)
+class model_ref(nn.Module):
+    def __init__(self, n):
+        super().__init__()
+        self.l = nn.Linear(n, n)
 
     def forward(self, x):
-        return self.fc1(x)
+        return self.l(x)
+
