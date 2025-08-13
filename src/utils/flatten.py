@@ -1,8 +1,13 @@
 import torch
 
-def flat(d):
+def flat(d, ks=None):
     r = []
-    for k in sorted(d):
+    if ks is None:
+        ks = list(d.keys())
+    for k in ks:
         r.append(d[k].reshape(-1))
     return torch.cat(r)
+
+# KEY
+# flat: flattener
 

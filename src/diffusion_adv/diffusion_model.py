@@ -158,13 +158,15 @@ def get_target_model_flat_dim(target_model_state_dict):
 def flatten_state_dict(state_dict):
     return torch.cat([p.flatten() for p in state_dict.values()])
 
-def unflatten_to_state_dict(flat_params, reference_state_dict):
+def unflatten_to_state_dict(flat_params, reference_state_dict, ks=None):
     new_state_dict = {}
     current_pos = 0
-    for key, param_ref in reference_state_dict.items():
+    if ks is None:
+        ks = list(reference_state_dict.keys())
+    for k in ks:
+        param_ref = reference_state_dict[k]
         num_elements = param_ref.numel()
-        shape = param_ref.shape
-        new_state_dict[key] = flat_params[current_pos : current_pos + num_elements].view(shape)
+        new_state_dict[k] = flat_params[current_pos : current_pos + num_elements].view(param_ref.shape)
         current_pos += num_elements
     if current_pos != flat_params.numel():
         raise ValueError("Mismatch in number of elements during unflattening.")
