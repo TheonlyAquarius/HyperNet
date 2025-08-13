@@ -7,16 +7,20 @@ from src.utils.data import ckpt_set
 def train(cfg):
     ds = ckpt_set(cfg['dataset'])
     dl = DataLoader(ds, batch_size=cfg['hyperparameters']['batch_size'], shuffle=True)
-    n = ds[0].numel()
+    w0, _, _ = ds[0]
+    n = w0.numel()
     m = gen(n)
     opt = torch.optim.Adam(m.parameters(), lr=cfg['hyperparameters']['learning_rate'])
-    loss = nn.MSELoss()
+    mse = nn.MSELoss()
     for _ in range(cfg['hyperparameters']['epochs']):
-        for d in dl:
-            o = m(d)
-            l = loss(o, d)
+        for w0, w1, t in dl:
+            o = m(w0, t)
+            l = mse(o, w1)
             opt.zero_grad()
             l.backward()
             opt.step()
     return m
+
+# KEY
+# train: parameter optimizer for generator using weight pairs and timestep
 
