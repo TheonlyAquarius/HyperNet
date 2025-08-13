@@ -2,6 +2,8 @@ import argparse
 import yaml
 from pathlib import Path
 from src.diffusion.train_generator import train as train_gen
+from src.train_target import train as train_tgt
+from src.rollout import eval as roll
 
 def entry():
     par = argparse.ArgumentParser()
@@ -17,6 +19,11 @@ def entry():
     t = cfg.get('task')
     if t == 'train_generator':
         train_gen(cfg)
+    elif t == 'train_target':
+        train_tgt(cfg)
+    elif t == 'rollout':
+        r = roll(cfg)
+        print(r)
 
 if __name__ == '__main__':
     entry()
